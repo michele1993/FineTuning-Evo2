@@ -1,7 +1,7 @@
 # Evo2 NVIDIA fine-tuning tutorial
 
 To my knowledge, the only available script to fine-tune evo2 is provided via the **NVIDIA BioNeMo Framework** (i.e,  [here](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/)). So, here, I describe how to install this framework on the CRG cluster, so that you can then run this script on the cluster (and hopefully adapt it to your need). 
-I also include a step to step guidance to run the tutorial on the cluster ([[#Evo2 fine-tuning tutorial]]).
+I also include a step to step guidance to run the tutorial on the cluster (see [Evo2 fine-tuning tutorial](#Evo2 fine-tuning tutorial)).
 
 ## Installation
 
