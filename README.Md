@@ -1,7 +1,7 @@
 # Evo2 NVIDIA fine-tuning tutorial
 
-To my knowledge, the only available script to fine-tune evo2 is provided via the **NVIDIA BioNeMo Framework** (i.e,  [here](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/)). So, here, I describe how to install this framework on the CRG cluster, so that you can then run evo2 fine-tune script on the cluster (and hopefully adapt it to your needs). 
-I also include a step to step guidance on how to run the actual NVIDIA tutorial on the cluster (see Evo2 fine-tuning tutorial section below).
+To my knowledge, the only available script to fine-tune evo2 is provided via the **NVIDIA BioNeMo Framework** (i.e,  [here](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/)). So, here, I describe how to install this framework on the CRG cluster, so that you can then run the evo2 fine-tune script on the cluster (and hopefully adapt it to your needs). 
+I also include a step to step guidance on how to run the script (see Evo2 fine-tuning tutorial section below).
 
 ## Installation
 
@@ -12,7 +12,7 @@ We first need to set-up the **NVIDIA BioNeMo Framework** , which includes all th
 - a free-to-use collection of programming tools and packages offering access to optimized, pre-trained biomolecular models and workflows.
 
 **Set-up**
-Fortunately, the Bionemo framework is provided as a Docker container, including all the necessary dependencies. Although the CRG cluster does not have Docker, we can use this container via Apptainer (Singularity), which is installed in the cluster (see [here](https://developer.nvidia.com/blog/docker-compatibility-singularity-hpc/) for more info on how to run docker Bionemo container in Apptainer/Singularity).
+Fortunately, the Bionemo framework is provided as a Docker container, including all the necessary dependencies. Although the CRG cluster does not have Docker, we can use this container via Apptainer (Singularity), which is installed in the cluster (see [here](https://developer.nvidia.com/blog/docker-compatibility-singularity-hpc/) for more info on how to run docker Bionemo containers in Apptainer/Singularity).
 
 In order to access this (Bionemo framework) container, we need to perform the following steps: 
 
