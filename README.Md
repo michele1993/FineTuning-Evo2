@@ -12,6 +12,7 @@ We first need to set-up the **NVIDIA BioNeMo Framework** , which includes all th
 - a free-to-use collection of programming tools and packages offering access to optimized, pre-trained biomolecular models and workflows.
 
 **Set-up**
+
 Fortunately, the Bionemo framework is provided as a Docker container, including all the necessary dependencies. Although the CRG cluster does not have Docker, we can use this container via Apptainer (Singularity), which is installed in the cluster (see [here](https://developer.nvidia.com/blog/docker-compatibility-singularity-hpc/) for more info on how to run docker Bionemo containers in Apptainer/Singularity).
 
 In order to access this (Bionemo framework) container, we need to perform the following steps: 
