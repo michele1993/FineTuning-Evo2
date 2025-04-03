@@ -47,7 +47,7 @@ to load the changes (After this, if you run `echo $SINGULARITY_DOCKER_PASSWORD` 
 
 **Note** if you don't want to have these variables in your `.bash_profile`, I recommend using [direnv](https://direnv.net/docs/installation.html) which you can easily install in the CRG cluster from binary without sudo privileges.
 
-4. Now that we have set the correct variables, we can finally download the BioNemoFramework container. To pull this container with Apptainer (installed in the cluster) run the following,
+4. Now that we have set the correct variables, we can finally download the BioNemoFramework container by pulling this container with Apptainer (installed in the cluster). To do so, run the following,
 ```
 apptainer pull docker://nvcr.io/nvidia/clara/bionemo-framework:2.5
 ```
