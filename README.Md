@@ -53,18 +53,22 @@ apptainer pull docker://nvcr.io/nvidia/clara/bionemo-framework:2.5
 ```
 This is going to take a while (i.e, 16GB), in my case it took roughly 40 min to complete. If this process completes correctly, you should have a `bionemo-framework_2.5.sif` file in your current directory.
 
-5. In the `bionemo-framework_2.5.sif` file, we have the entire BioNeMo Framework inside a container that we can run in the CRG cluster with Apptainer, including  all the dependencies needed to run the NVIDIA fine-tune evo2 tutorial (and extend it to any custom dataset).
+5. In `bionemo-framework_2.5.sif`, we have the entire BioNeMo Framework inside a container that we can run in the CRG cluster with Apptainer, including  all the dependencies needed to run the NVIDIA fine-tune evo2 tutorial (and extend it to any custom dataset).
+
+From here you can use this container as it suits you (no only for evo2 but for any BioNeMo model/functionality).Below I include the steps on how I reproduced the actual NVIDIA evo2 fine-tune [tutorial](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/) using this container.
+
 ## Evo2 fine-tuning tutorial
 
 Now that we have access to the **NVIDIA BioNeMo Framework**, we can use it to run the evo2 fine-tuning [tutorial](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/).
 
-We can do this by asking for an interactive job on the CRG cluster asking for at least a GPU with 40GB GPU.
+We can do this by asking for an interactive job on the CRG cluster, asking for at least a GPU with 40GB GPU.
 
 Once, you are granted the interactive node, execute the following to run the container interactively (should be run from the directory where you stored the `bionemo-framework_2.5.sif` file),
 ```
 apptainer shell --nv bionemo-framework_2.5.sif
 ```
-From inside here you can run all the command in the [tutorial](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/) . To make things more convenient since I don't want to run a JupiterNotebook, I created corresponding python script to perform all the pre-processing step, which should be executed in the following way,
+This will open a shell from inside the container with access to all the Bionemo functionalities. Since we asked for an interactive node, we can run stuff directly from this "Apptainer" shell, which will be executed by the interactive node.
+From inside here, you have access to all the scripts/functions used in the NVIDIA tutorial. Since I don't want to run a JupiterNotebook, I created corresponding python scripts to perform all the required operations (you can find these scripts in this repo). Using these scripts, you should run the following,
 ```
 python get_data.py
 ```
@@ -98,3 +102,5 @@ find pretraining_demo -name "events.out.tfevents*"
 Next, you can download this on your local machine and visualise it with tensorboard.
 
 **IMPORTANT** In this tutorial, they show the `1b` evo2 checkpoint is sensitive to `--fp8`, unlike the `7b` checkpoint (and `40b` ?). So you should only use this checkpoint with `fp8` or maybe find the newer corrected `1b` checkpoint if available.
+
+Finally, here I used an interactive session for simplicity, but everything can be adapted to a job submission, using the appropriate Apptainer commands.
