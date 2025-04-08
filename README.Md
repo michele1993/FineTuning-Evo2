@@ -101,6 +101,6 @@ find pretraining_demo -name "events.out.tfevents*"
 ```
 Next, you can download this on your local machine and visualise it with tensorboard.
 
-**IMPORTANT** In this tutorial, they show the `1b` evo2 checkpoint is sensitive to `--fp8`, unlike the `7b` checkpoint (and `40b` ?). So you should only use this checkpoint with `fp8` or maybe find the newer corrected `1b` checkpoint if available.
+**IMPORTANT** In this tutorial, they show the `1b` evo2 checkpoint is sensitive to `--fp8`, unlike the `7b` checkpoint (and `40b` ?). So you should only use the 1-billion checkpoint if you used FP8 enables (i.e., how it was trained)` or maybe find the newer corrected `1b` checkpoint if available. Alternatively, you need to use the 7-billion checkpoint, which does not appear sensitive to FP8.
 
 Finally, here I used an interactive session for simplicity, but everything can be adapted to a job submission, using the appropriate Apptainer commands.
