@@ -1,6 +1,10 @@
 import os
 import subprocess
 
+# Get BioNemo set cache dir to load base model
+cache_dir = os.environ.get("BIONEMO_CACHE")
+
+# Get config file dir
 root_dir = os.path.dirname(os.path.abspath(__file__)) 
 config_file_dir = os.path.join(root_dir,"training_data_config.yaml")
 
@@ -21,6 +25,7 @@ else:
     model_subset_option = "--activation-checkpoint-recompute-num-layers 5"
 
 # Construct the training command
+checkpoint_path = os.path.join(cache_dir, "nemo2_evo2_1b_8k")
 train_cmd = f"""train_evo2 \
     -d training_data_config.yaml \
     --dataset-dir ./preprocessed_data \
@@ -35,7 +40,7 @@ train_cmd = f"""train_evo2 \
     --warmup-steps {warmup_steps} \
     --grad-acc-batches 4 \
     --max-steps {MAX_STEPS} \
-    --ckpt-dir nemo2_evo2_1b_8k \
+    --ckpt-dir {checkpoint_path} \
     --clip-grad 250 \
     --wd 0.001 \
     --attention-dropout 0.01 \
