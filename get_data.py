@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-## Download
+## Download some fasta sequence
 concat_path = "chr20_21_22.fa"
 
 if not os.path.exists(concat_path):
@@ -27,6 +27,7 @@ if not os.path.exists(concat_path):
 
 print("File creation complete:", concat_path)
 
+## Create necessary `.yaml` config file
 full_fasta_path = os.path.abspath(concat_path)
 output_dir = os.path.abspath("preprocessed_data")
 output_yaml = f"""
