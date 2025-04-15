@@ -82,7 +82,7 @@ Below, I go through the NVIDIA fine-tuning tutorial. Since I don't want to run a
 #### 1) Training Data
  Evo2 uses megatron style datasets with advanced support for randomly indexing into documents, and packing documents together into batches at scale.
  
-**So** this step requires converting the required FASTA dataset to this format, through the following substeps,
+So the first step requires converting the desired **FASTA** dataset to this format, through the following two steps,
 1. Create a `.yaml` config file. For an example on how to do this in python, look at the `get_data.py` [script](https://github.com/michele1993/FineTuning-Evo2/blob/master/get_data.py) where we first download some fasta sequences and then create the `preprocess_config.yaml` file (as in the original NVIDIA tutorial). This is also where you specify top level train/validation/test splitting decisions. 
 
 **Key** here you can specify any custom **fasta** dataset, by passing its path to the `datapaths` flag. The important thing is that you create an appropriate preprocess_config.yaml for the next (preprocessing) step
