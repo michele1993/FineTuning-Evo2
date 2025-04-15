@@ -58,20 +58,22 @@ This is going to take a while (i.e, 16GB), in my case it took roughly 40 min to 
 
 From here you can use this container as it suits you (no only for evo2 but for any BioNeMo model/functionality).Below I include the steps on how I reproduced the actual NVIDIA evo2 fine-tune [tutorial](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/) using this container.
 
-## Evo2 tutorials
+## Evo2 usage
 
-Now that we have access to the **NVIDIA BioNeMo Framework**, we can use it to any the NVIDIA evo2 tutorials.
+Now that we have access to the **NVIDIA BioNeMo Framework**, we can use it to run any of the provided script to fine-tune (`train_evo2`), predict (`predict_evo2`) or perform inference (`infer_evo2`) with evo2.
 
-We can do this by asking for an interactive job or by creating appropriate job scripts, asking for at least a GPU with 40GB GPU.
+On the cluster, we can start by asking for an interactive job or by creating appropriate job scripts, asking for at least a GPU with 40GB GPU (for the 1-billion model).
 
-**From an interactive job**
+Here, I assume we are running an interactice job.
 Once, you are granted the interactive node, execute the following to run the container interactively (should be run from the directory where you stored the `bionemo-framework_2.5.sif` file),
 ```
 apptainer shell --nv bionemo-framework_2.5.sif
 ```
 This will open a shell from inside the container with access to all the Bionemo functionalities. 
 Since we asked for an interactive node, we can run stuff directly from this "Apptainer" shell, which will be executed by the interactive node.
-From inside here, you have access to all the scripts/functions used in the NVIDIA tutorials. Since I don't want to run a JupiterNotebook, I created corresponding python scripts to perform all the required operations (you can find these scripts in this repo).
+From inside here, you have access to all the fine-tune (`train_evo2`), predict (`predict_evo2`) or perform inference (`infer_evo2`).
+
+Below, I go through the NVIDIA fine-tuning tutorial. Since I don't want to run a JupiterNotebook, I created corresponding python scripts to perform all the required operations (you can find these scripts in this repo).
 
 
 ### 1st Tutorial:fine-tuning evo2
