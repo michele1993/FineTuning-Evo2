@@ -48,7 +48,7 @@ train_cmd = f"""train_evo2 \
     --val-check-interval {val_check_interval} \
     {model_subset_option} \
     --ckpt-async-save \
-    --no-wandb"""
+    --no-wandb """
 
 # Execute the command
 subprocess.run(train_cmd, shell=True, check=True)
