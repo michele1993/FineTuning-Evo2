@@ -1,6 +1,7 @@
 # Evo2 NVIDIA fine-tuning tutorial
 
 To my knowledge, the only available script to fine-tune evo2 is provided via the **NVIDIA BioNeMo Framework** (i.e,  [here](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/)). Here, I describe how to install this framework on the CRG cluster, so that we can then run the evo2 fine-tune script on the cluster (and hopefully adapt it to our needs). 
+This tutorial applies to any HPC facilites with [Apptainer](https://apptainer.org) installed.
 I also include a step to step guidance on how to run the actual script (see Evo2 fine-tuning tutorial section below).
 
 ## Installation
@@ -57,50 +58,78 @@ This is going to take a while (i.e, 16GB), in my case it took roughly 40 min to 
 
 From here you can use this container as it suits you (no only for evo2 but for any BioNeMo model/functionality).Below I include the steps on how I reproduced the actual NVIDIA evo2 fine-tune [tutorial](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/) using this container.
 
-## Evo2 fine-tuning tutorial
+## Evo2 tutorials
 
-Now that we have access to the **NVIDIA BioNeMo Framework**, we can use it to run the evo2 fine-tuning [tutorial](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/).
+Now that we have access to the **NVIDIA BioNeMo Framework**, we can use it to any the NVIDIA evo2 tutorials.
 
-We can do this by asking for an interactive job on the CRG cluster, asking for at least a GPU with 40GB GPU.
+We can do this by asking for an interactive job or by creating appropriate job scripts, asking for at least a GPU with 40GB GPU.
 
+**From an interactive job**
 Once, you are granted the interactive node, execute the following to run the container interactively (should be run from the directory where you stored the `bionemo-framework_2.5.sif` file),
 ```
 apptainer shell --nv bionemo-framework_2.5.sif
 ```
-This will open a shell from inside the container with access to all the Bionemo functionalities. Since we asked for an interactive node, we can run stuff directly from this "Apptainer" shell, which will be executed by the interactive node.
-From inside here, you have access to all the scripts/functions used in the NVIDIA tutorial. Since I don't want to run a JupiterNotebook, I created corresponding python scripts to perform all the required operations (you can find these scripts in this repo). Using these scripts, you should run the following,
-```
-python get_data.py
-```
-**NOTE** the `get_data.py` download some `.fasta` dataset, you can edit this to use your custom dataset. The important thing is that you create an appropriate `preprocess_config.yaml` for the next (preprocessing) step,
-```
+This will open a shell from inside the container with access to all the Bionemo functionalities. 
+Since we asked for an interactive node, we can run stuff directly from this "Apptainer" shell, which will be executed by the interactive node.
+From inside here, you have access to all the scripts/functions used in the NVIDIA tutorials. Since I don't want to run a JupiterNotebook, I created corresponding python scripts to perform all the required operations (you can find these scripts in this repo).
+
+
+### 1st Tutorial:fine-tuning evo2
+([here](https://docs.nvidia.com/bionemo-framework/latest/user-guide/examples/bionemo-evo2/fine-tuning-tutorial/))
+
+#### 1) Training Data
+ Evo2 uses megatron style datasets with advanced support for randomly indexing into documents, and packing documents together into batches at scale.
+ 
+**So** this step requires converting the required FASTA dataset to this format, through the following substeps,
+1. Create a `.yaml` config file. For an example on how to do this in python, look at the `get_data.py` [script](https://github.com/michele1993/FineTuning-Evo2/blob/master/get_data.py) where we first download some fasta sequences and then create the `preprocess_config.yaml` file (as in the original NVIDIA tutorial). This is also where you specify top level train/validation/test splitting decisions. 
+
+**Key** here you can specify any custom **fasta** dataset, by passing its path to the `datapaths` flag. The important thing is that you create an appropriate preprocess_config.yaml for the next (preprocessing) step
+
+2. Call `preprocess_evo2` from the BioNeMo framework to generate the required dataset.
+```bash
 preprocess_evo2 --config preprocess_config.yaml
 ```
 
-**Select evo2 checkpoint**
-Next, you need to specify the evo2 checkpoint, you want to download. 
-In this case, they use the `1b` model (**only need to run this once**),
-```
-evo2_convert_to_nemo2 --model-path hf://arcinstitute/savanna_evo2_1b_base  --model-size 1b --output-dir nemo2_evo2_1b_8k
-```
-**Important** here you can specify any evo2 checkpoint from hugging face (e.g, 7b, 40b).
+#### 2) Select desired checkpoint and convert to nemo2
+Step 2 involves converting a desired evo2 model checkpoint available in savanna format to nemo2 format (i.e., format used by the BioNeMo framework).
 
-**Configure the training and validation set**
-```
-python create_training_config.py
-```
+This can be done by calling `evo2_convert_to_nemo2` script from the BioNeMo framework
+**Crucially** Here we can specify the desired model checkpoint (i.e., any evo2 hugging face can be used).
 
-and finally you can start the fine-tuning process by running,
+```bash
+evo2_convert_to_nemo2 --model-path hf://arcinstitute/savanna_evo2_{MODEL_SIZE}_base --model-size {MODEL_SIZE} --output-dir nemo2_evo2_{MODEL_SIZE}_8k
 ```
-train_evo.py
-```
+where `MODEL_SIZE` could be `1b`, `7b` or `40b`.
 
-At the end of training, you can find the tensorboard log file by running,
-```
-find pretraining_demo -name "events.out.tfevents*"
-```
-Next, you can download this on your local machine and visualise it with tensorboard.
+**IMPORTANT** should check or use if statement to make sure required model isn't already downloaded (e.g., in `.cache` dir).
 
-**IMPORTANT** In this tutorial, they show the `1b` evo2 checkpoint is sensitive to `--fp8`, unlike the `7b` checkpoint (and `40b` ?). So you should only use the 1-billion checkpoint if you used FP8 enables (i.e., how it was trained)` or maybe find the newer corrected `1b` checkpoint if available. Alternatively, you need to use the 7-billion checkpoint, which does not suffer from this limitation and seems robust to FP8 being activated or not.
+#### 3) Config the training data
+Create a config file for the created megratron dataset (for an example on how to do this, look at the `create_training_config.py` [script](https://github.com/michele1993/FineTuning-Evo2/blob/master/create_training_config.py)). This other config file must then be passed to `-d flag of `train_evo` script in the next step.
 
-Finally, here I used an interactive session for simplicity, but everything can be adapted to a job submission, using the appropriate Apptainer commands.
+
+#### 4) Training
+This is done via the `train_evo2` command, which takes several flags/options to specify a lot of things, from hyper-parameters (e.g., learning rate, batch size) to the number of devices, output directories etc. For a conrete example see the `train_evo.py` [scirpt](https://github.com/michele1993/FineTuning-Evo2/blob/master/train_evo.py).
+
+**IMPORTANT** `train_evo2` takes `--fp8` flag to ensure FP8 is enabled during training in BioNemo, this is important if using the default 1b-evo2 (i.e., not robust to other precision).
+However, I noticed using `--fp8` may give issue when running the `predict_evo2` script to get log likelihood.
+
+**Parallelisation**
+- We can specify the number of devices (i.e., GPUs), `--devices` as well as the number of nodes, `--num-nodes` as flags to `train_evo2`, allowing super easy parallelisation.
+
+#### Key outputs
+Below are the two most important outputs after running `train_evo2`, which will be stored in whater directory was passed to `--experiment-dir`.
+**tensorboard output**: which can be found by running
+```bash
+find OUTPUT_DIR_NAME -name "events.out.tfevents*"
+``` 
+where `OUTPUT_DIR_NAME` depends on the directory passed to the `--experiment-dir` flag of `train_evo2`.
+
+**SFT Model checkpoints**: The updated weights are available inside the directory that was passed to the `--experiment-dir` flag of `train_evo2`. These are conveniently named  as `'default--val_loss=...`,  reflecting the validation loss, epoch etc. There are multiple ones depending on the number of checkpoints that were carried out. The last one has a `-last` sufix. 
+
+**Note** the `--ckpt-dir` flag of `train_evo2` is used to denote the directory from which the (base) model should be loaded for fine-tuning.
+
+**Next** We can load this checkpoint and use it for inference (i.e., by passing its path to the `--ckpt-dir` flag of `infer_evo2`) and for loglikelihood prediction (i.e., by passing its path to the `--ckpt-dir` flag of `predict_evo2`).
+
+
+**IMPORTANT** In the NVIDIA tutorial, they show the `1b` evo2 checkpoint is sensitive to `--fp8`, unlike the `7b` checkpoint (and `40b` ?). So you should only use the 1-billion checkpoint if you used FP8 enables (i.e., how it was trained)` or maybe find the newer corrected `1b` checkpoint if available. Alternatively, you need to use the 7-billion checkpoint, which does not suffer from this limitation and seems robust to FP8 being activated or not.
+
