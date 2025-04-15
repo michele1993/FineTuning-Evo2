@@ -126,7 +126,8 @@ However, I noticed using `--fp8` may give issue when running the `predict_evo2` 
 - We can specify the number of devices (i.e., GPUs), `--devices` as well as the number of nodes, `--num-nodes` as flags to `train_evo2`, allowing super easy parallelisation.
 
 #### Key outputs
-Below are the two most important outputs after running `train_evo2`, which will be stored in whater directory was passed to `--experiment-dir`.
+Below are the two most important outputs after running `train_evo2`, which will be stored in whatever directory is passed to the `--experiment-dir` flag of `train_evo2`.
+
 **tensorboard output**: which can be found by running
 ```bash
 find OUTPUT_DIR_NAME -name "events.out.tfevents*"
