@@ -1,6 +1,7 @@
 import os
 import subprocess
 
+## Download
 concat_path = "chr20_21_22.fa"
 
 if not os.path.exists(concat_path):
